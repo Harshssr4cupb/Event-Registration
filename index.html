@@ -208,49 +208,44 @@ Submit Registration
 </div>
 
 <script>
-const form = document.getElementById("registrationForm");
-const submitBtn = document.getElementById("submitBtn");
-const treasure = document.getElementById("treasure");
-const second = document.getElementById("secondCandidate");
-const declaration = document.getElementById("declaration");
+function submitForm(e) {
+    e.preventDefault();
 
-const secondInputs = second.querySelectorAll("input");
+    const events = [...document.querySelectorAll('input[name="event"]:checked')]
+        .map(e => e.parentElement.innerText.replace("Click here", "").trim())
+        .join(", ");
 
-treasure.addEventListener("change", () => {
-    if (treasure.checked) {
-        second.classList.remove("hidden");
-        secondInputs.forEach(i => i.required = true);
-    } else {
-        second.classList.add("hidden");
-        secondInputs.forEach(i => {
-            i.required = false;
-            i.value = "";
-        });
-    }
-    validateForm();
-});
+    const data = {
+        events: events,
+        fullname: document.getElementById("fullname").value,
+        registrationno: document.getElementById("registrationno").value,
+        department: document.getElementById("department").value,
+        email: document.getElementById("email").value,
+        mobile: document.getElementById("mobile").value,
+        secondname: document.getElementById("secondname")?.value || "",
+        secondreg: document.getElementById("secondreg")?.value || "",
+        seconddept: document.getElementById("seconddept")?.value || "",
+        secondemail: document.getElementById("secondemail")?.value || "",
+        secondmobile: document.getElementById("secondmobile")?.value || ""
+    };
 
-function validateForm() {
-    const events = document.querySelectorAll('input[name="event"]');
-    const eventSelected = [...events].some(e => e.checked);
-    submitBtn.disabled = !(eventSelected && declaration.checked && form.checkValidity());
-}
-
-form.querySelectorAll("input").forEach(i => {
-    i.addEventListener("input", validateForm);
-    i.addEventListener("change", validateForm);
-});
-
-function showImage(src) {
-    document.getElementById("imgModal").style.display = "block";
-    document.getElementById("modalImg").src = src;
-}
-
-function closeModal() {
-    document.getElementById("imgModal").style.display = "none";
+    fetch("YOUR_SCRIPT_URL_HERE", {
+        method: "POST",
+        body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(() => {
+        alert("✅ Registration submitted successfully!");
+        document.getElementById("registrationForm").reset();
+        document.getElementById("submitBtn").disabled = true;
+        document.getElementById("secondCandidate").classList.add("hidden");
+    })
+    .catch(err => {
+        alert("❌ Submission failed. Please try again.");
+        console.error(err);
+    });
 }
 </script>
-
 </body>
 </html>
 
