@@ -131,7 +131,25 @@ I agree to abide by all rules and regulations of the event(s).
 </div>
 
 <script>
-const scriptURL = "https://script.google.com/macros/s/AKfycbxcCl-nE19S6E5EWLxnKbwK93dlcsrtwtcoeShqp1xUaRO7MP1q2r7245P3sVY00JGG/exec";
+const scriptURL = "https://script.google.com/macros/s/AKfycbx06mU4AVxcSm5WfixO0YZoydbco8CLDi1zFQl29bjYvUz_hZz7YJKPJnk42ztaFWo/exec";
+const form = document.getElementById("registrationForm");
+
+form.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    fetch(scriptURL, {
+        method: "POST",
+        mode: "no-cors",
+        body: new FormData(form)
+    })
+    .then(() => {
+        alert("✅ Registration submitted successfully!");
+        form.reset();
+    })
+    .catch(() => {
+        alert("❌ Submission failed. Please try again.");
+    });
+});
 
 const form = document.getElementById("registrationForm");
 const submitBtn = document.getElementById("submitBtn");
