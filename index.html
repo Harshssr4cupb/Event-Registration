@@ -105,6 +105,7 @@ button:hover:enabled {
     font-size: 35px;
     color: white;
     cursor: pointer;
+    font-weight: bold;
 }
 </style>
 </head>
@@ -114,39 +115,24 @@ button:hover:enabled {
 <div class="container">
 <h2>Event Participation Registration Form</h2>
 
-<form id="registrationForm" onsubmit="submitForm(event)">
+<form id="registrationForm">
 
 <h3>Event Selection (Select at least one)</h3>
 
-<label>
-<input type="checkbox" name="event">
-Speech Competition
-<a href="javascript:void(0)" onclick="showImage('speech.png')">Click here</a>
-</label>
+<label><input type="checkbox" name="event"> Speech Competition
+<a href="javascript:void(0)" onclick="showImage('speech.png')">Click here</a></label>
 
-<label>
-<input type="checkbox" name="event">
-Rubik Cube
-<a href="javascript:void(0)" onclick="showImage('Rubikcube.png')">Click here</a>
-</label>
+<label><input type="checkbox" name="event"> Rubik Cube
+<a href="javascript:void(0)" onclick="showImage('Rubikcube.png')">Click here</a></label>
 
-<label>
-<input type="checkbox" name="event">
-Sudoku Challenge
-<a href="javascript:void(0)" onclick="showImage('Sudoku.png')">Click here</a>
-</label>
+<label><input type="checkbox" name="event"> Sudoku Challenge
+<a href="javascript:void(0)" onclick="showImage('Sudoku.png')">Click here</a></label>
 
-<label>
-<input type="checkbox" name="event">
-Mem-O-Mathematics
-<a href="javascript:void(0)" onclick="showImage('Memoomathematics.png')">Click here</a>
-</label>
+<label><input type="checkbox" name="event"> Mem-O-Mathematics
+<a href="javascript:void(0)" onclick="showImage('Memoomathematics.png')">Click here</a></label>
 
-<label>
-<input type="checkbox" id="treasure" name="event">
-Treasure Hunt
-<a href="javascript:void(0)" onclick="showImage('treasurehunt.png')">Click here</a>
-</label>
+<label><input type="checkbox" id="treasure" name="event"> Treasure Hunt
+<a href="javascript:void(0)" onclick="showImage('treasurehunt.png')">Click here</a></label>
 
 <h3>Participant Details</h3>
 
@@ -169,13 +155,13 @@ Treasure Hunt
 <h3>Second Participant Details (Treasure Hunt Only)</h3>
 
 <label>Full Name</label>
-<input type="text" id="secondname" pattern="[A-Za-z .]+">
+<input type="text" id="secondname">
 
 <label>Registration No.</label>
-<input type="text" id="secondreg" pattern="[A-Za-z0-9]+">
+<input type="text" id="secondreg">
 
 <label>Department</label>
-<input type="text" id="seconddept" pattern="[A-Za-z ]+">
+<input type="text" id="seconddept">
 
 <label>E-mail Id</label>
 <input type="email" id="secondemail">
@@ -184,65 +170,70 @@ Treasure Hunt
 <input type="tel" id="secondmobile" pattern="[0-9]{10}">
 </div>
 
-<!-- DECLARATION -->
 <h3>Declaration</h3>
 <label>
 <input type="checkbox" id="declaration" required>
 I agree to abide by all the rules and regulations of the event(s). I understand that the decision of the organizing committee and judges shall be final. I take full responsibility for my conduct during the event and agree that the organizers shall not be held responsible for any loss or damage arising from my participation.
 </label>
 
-<button type="submit" id="submitBtn" disabled>
-Submit Registration
-</button>
-
+<button type="submit" id="submitBtn" disabled>Submit Registration</button>
 
 </form>
 </div>
 
 <div id="imgModal" class="modal" onclick="closeModal()">
-    <span class="close">×</span>
-    <img class="modal-content" id="modalImg">
+<span class="close">×</span>
+<img class="modal-content" id="modalImg">
 </div>
 
 <script>
-function submitForm(e) {
+const scriptURL = "https://script.google.com/macros/s/AKfycbzHhD4VPIjexH5p21ulJzEpzRUQRx8y3M57IDlZDgrjUAKSPnsKIwfuzu99cplokTIF/exec";
+
+const form = document.getElementById("registrationForm");
+const submitBtn = document.getElementById("submitBtn");
+const treasure = document.getElementById("treasure");
+const second = document.getElementById("secondCandidate");
+const declaration = document.getElementById("declaration");
+
+const secondInputs = second.querySelectorAll("input");
+
+treasure.addEventListener("change", () => {
+    second.classList.toggle("hidden", !treasure.checked);
+    secondInputs.forEach(i => i.required = treasure.checked);
+    validateForm();
+});
+
+function validateForm() {
+    const eventSelected = [...document.querySelectorAll('input[name="event"]')]
+        .some(e => e.checked);
+    submitBtn.disabled = !(eventSelected && declaration.checked && form.checkValidity());
+}
+
+form.querySelectorAll("input").forEach(i => {
+    i.addEventListener("input", validateForm);
+    i.addEventListener("change", validateForm);
+});
+
+form.addEventListener("submit", e => {
     e.preventDefault();
+    fetch(scriptURL, { method: "POST", mode: "no-cors", body: new FormData(form) })
+        .then(() => {
+            alert("✅ Registration submitted successfully!");
+            form.reset();
+            submitBtn.disabled = true;
+            second.classList.add("hidden");
+        });
+});
 
-    const events = [...document.querySelectorAll('input[name="event"]:checked')]
-        .map(e => e.parentElement.innerText.replace("Click here", "").trim())
-        .join(", ");
+function showImage(src) {
+    document.getElementById("imgModal").style.display = "block";
+    document.getElementById("modalImg").src = src;
+}
 
-    const data = {
-        events: events,
-        fullname: document.getElementById("fullname").value,
-        registrationno: document.getElementById("registrationno").value,
-        department: document.getElementById("department").value,
-        email: document.getElementById("email").value,
-        mobile: document.getElementById("mobile").value,
-        secondname: document.getElementById("secondname")?.value || "",
-        secondreg: document.getElementById("secondreg")?.value || "",
-        seconddept: document.getElementById("seconddept")?.value || "",
-        secondemail: document.getElementById("secondemail")?.value || "",
-        secondmobile: document.getElementById("secondmobile")?.value || ""
-    };
-
-    fetch("YOUR_SCRIPT_URL_HERE", {
-        method: "POST",
-        body: JSON.stringify(data)
-    })
-    .then(res => res.json())
-    .then(() => {
-        alert("✅ Registration submitted successfully!");
-        document.getElementById("registrationForm").reset();
-        document.getElementById("submitBtn").disabled = true;
-        document.getElementById("secondCandidate").classList.add("hidden");
-    })
-    .catch(err => {
-        alert("❌ Submission failed. Please try again.");
-        console.error(err);
-    });
+function closeModal() {
+    document.getElementById("imgModal").style.display = "none";
 }
 </script>
+
 </body>
 </html>
-
