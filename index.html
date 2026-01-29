@@ -147,7 +147,7 @@ I agree to abide by all rules and regulations of the event(s). The decision of t
 </div>
 
 <script>
-const scriptURL = "https://script.google.com/macros/s/AKfycbzHhD4VPIjexH5p21ulJzEpzRUQRx8y3M57IDlZDgrjUAKSPnsKIwfuzu99cplokTIF/exec";
+const scriptURL = "https://script.google.com/macros/s/AKfycbwr8K12N170Wy4CEhruhJGHIVHMv5VKRei817SPGj6zRqXZk920S8HgErjOLncMwo80/exec";
 
 const form = document.getElementById("registrationForm");
 const submitBtn = document.getElementById("submitBtn");
@@ -175,18 +175,20 @@ form.querySelectorAll("input").forEach(i => {
 
 form.addEventListener("submit", e => {
     e.preventDefault();
+
     fetch(scriptURL, {
         method: "POST",
         body: new FormData(form)
     })
-    .then(() => {
-        alert("✅ Registration submitted successfully!");
-        form.reset();
-        submitBtn.disabled = true;
-        second.classList.add("hidden");
+    .then(res => res.text())
+    .then(text => {
+        alert("Server response:\n" + text);
     })
-    .catch(() => alert("❌ Submission failed"));
+    .catch(err => {
+        alert("JS Error:\n" + err);
+    });
 });
+
 </script>
 
 </body>
