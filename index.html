@@ -119,55 +119,55 @@ button:hover:enabled {
 
 <h3>Event Selection (Select at least one)</h3>
 
-<label><input type="checkbox" name="event"> Speech Competition
+<label><input type="checkbox" name="event" value="Speech Competition"> Speech Competition
 <a href="javascript:void(0)" onclick="showImage('speech.png')">Click here</a></label>
 
-<label><input type="checkbox" name="event"> Rubik Cube
+<label><input type="checkbox" name="event" value="Rubik Cube"> Rubik Cube
 <a href="javascript:void(0)" onclick="showImage('Rubikcube.png')">Click here</a></label>
 
-<label><input type="checkbox" name="event"> Sudoku Challenge
+<label><input type="checkbox" name="event" value="Sudoku Challenge"> Sudoku Challenge
 <a href="javascript:void(0)" onclick="showImage('Sudoku.png')">Click here</a></label>
 
-<label><input type="checkbox" name="event"> Mem-O-Mathematics
+<label><input type="checkbox" name="event" value="Mem-O-Mathematics"> Meme-O-Mathematics
 <a href="javascript:void(0)" onclick="showImage('Memoomathematics.png')">Click here</a></label>
 
-<label><input type="checkbox" id="treasure" name="event"> Treasure Hunt
+<label><input type="checkbox" id="treasure" name="event" value="Treasure Hunt"> Treasure Hunt
 <a href="javascript:void(0)" onclick="showImage('treasurehunt.png')">Click here</a></label>
 
 <h3>Participant Details</h3>
 
 <label>Full Name</label>
-<input type="text" id="fullname" required pattern="[A-Za-z .]+">
+<input type="text" id="fullname" name="fullname" required pattern="[A-Za-z .]+">
 
 <label>Registration No.</label>
-<input type="text" id="registrationno" required pattern="[A-Za-z0-9]+">
+<input type="text" id="registrationno" name="registrationno" required pattern="[A-Za-z0-9]+">
 
 <label>Department</label>
-<input type="text" id="department" required pattern="[A-Za-z ]+">
+<input type="text" id="department" name="department" required pattern="[A-Za-z ]+">
 
 <label>E-mail Id</label>
-<input type="email" id="email" required>
+<input type="email" id="email" name="email" required>
 
 <label>Mobile Number</label>
-<input type="tel" id="mobile" pattern="[0-9]{10}" required>
+<input type="tel" id="mobile" name="mobile" pattern="[0-9]{10}" required>
 
 <div id="secondCandidate" class="hidden">
 <h3>Second Participant Details (Treasure Hunt Only)</h3>
 
 <label>Full Name</label>
-<input type="text" id="secondname">
+<input type="text" id="secondname" name="secondname">
 
 <label>Registration No.</label>
-<input type="text" id="secondreg">
+<input type="text" id="secondreg" name="secondreg">
 
 <label>Department</label>
-<input type="text" id="seconddept">
+<input type="text" id="seconddept" name="seconddept">
 
 <label>E-mail Id</label>
-<input type="email" id="secondemail">
+<input type="email" id="secondemail" name="secondemail">
 
 <label>Mobile Number</label>
-<input type="tel" id="secondmobile" pattern="[0-9]{10}">
+<input type="tel" id="secondmobile" name="secondmobile" pattern="[0-9]{10}">
 </div>
 
 <h3>Declaration</h3>
@@ -199,7 +199,10 @@ const secondInputs = second.querySelectorAll("input");
 
 treasure.addEventListener("change", () => {
     second.classList.toggle("hidden", !treasure.checked);
-    secondInputs.forEach(i => i.required = treasure.checked);
+    secondInputs.forEach(i => {
+    i.required = treasure.checked;
+    i.disabled = !treasure.checked;
+});
     validateForm();
 });
 
