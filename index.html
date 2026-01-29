@@ -81,32 +81,6 @@ button:enabled {
 button:hover:enabled {
     background: #6f4518;
 }
-
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 9999;
-    inset: 0;
-    background: rgba(0,0,0,0.7);
-}
-
-.modal-content {
-    margin: 5% auto;
-    display: block;
-    max-width: 80%;
-    max-height: 80%;
-    border-radius: 12px;
-}
-
-.close {
-    position: absolute;
-    top: 20px;
-    right: 30px;
-    font-size: 35px;
-    color: white;
-    cursor: pointer;
-    font-weight: bold;
-}
 </style>
 </head>
 
@@ -119,71 +93,57 @@ button:hover:enabled {
 
 <h3>Event Selection (Select at least one)</h3>
 
-<label><input type="checkbox" name="event"> Speech Competition
-<a href="javascript:void(0)" onclick="showImage('speech.png')">Click here</a></label>
-
-<label><input type="checkbox" name="event"> Rubik Cube
-<a href="javascript:void(0)" onclick="showImage('Rubikcube.png')">Click here</a></label>
-
-<label><input type="checkbox" name="event"> Sudoku Challenge
-<a href="javascript:void(0)" onclick="showImage('Sudoku.png')">Click here</a></label>
-
-<label><input type="checkbox" name="event"> Mem-O-Mathematics
-<a href="javascript:void(0)" onclick="showImage('Memoomathematics.png')">Click here</a></label>
-
-<label><input type="checkbox" id="treasure" name="event"> Treasure Hunt
-<a href="javascript:void(0)" onclick="showImage('treasurehunt.png')">Click here</a></label>
+<label><input type="checkbox" name="event" value="Speech Competition"> Speech Competition</label>
+<label><input type="checkbox" name="event" value="Rubik Cube"> Rubik Cube</label>
+<label><input type="checkbox" name="event" value="Sudoku Challenge"> Sudoku Challenge</label>
+<label><input type="checkbox" name="event" value="Mem-O-Mathematics"> Mem-O-Mathematics</label>
+<label><input type="checkbox" id="treasure" name="event" value="Treasure Hunt"> Treasure Hunt</label>
 
 <h3>Participant Details</h3>
 
 <label>Full Name</label>
-<input type="text" id="fullname" required pattern="[A-Za-z .]+">
+<input type="text" name="fullname" required pattern="[A-Za-z .]+">
 
 <label>Registration No.</label>
-<input type="text" id="registrationno" required pattern="[A-Za-z0-9]+">
+<input type="text" name="registrationno" required>
 
 <label>Department</label>
-<input type="text" id="department" required pattern="[A-Za-z ]+">
+<input type="text" name="department" required pattern="[A-Za-z ]+">
 
-<label>E-mail Id</label>
-<input type="email" id="email" required>
+<label>Email ID</label>
+<input type="email" name="email" required>
 
 <label>Mobile Number</label>
-<input type="tel" id="mobile" pattern="[0-9]{10}" required>
+<input type="tel" name="mobile" pattern="[0-9]{10}" required>
 
 <div id="secondCandidate" class="hidden">
 <h3>Second Participant Details (Treasure Hunt Only)</h3>
 
 <label>Full Name</label>
-<input type="text" id="secondname">
+<input type="text" name="secondname">
 
 <label>Registration No.</label>
-<input type="text" id="secondreg">
+<input type="text" name="secondreg">
 
 <label>Department</label>
-<input type="text" id="seconddept">
+<input type="text" name="seconddept">
 
-<label>E-mail Id</label>
-<input type="email" id="secondemail">
+<label>Email ID</label>
+<input type="email" name="secondemail">
 
 <label>Mobile Number</label>
-<input type="tel" id="secondmobile" pattern="[0-9]{10}">
+<input type="tel" name="secondmobile" pattern="[0-9]{10}">
 </div>
 
 <h3>Declaration</h3>
 <label>
 <input type="checkbox" id="declaration" required>
-I agree to abide by all the rules and regulations of the event(s). I understand that the decision of the organizing committee and judges shall be final. I take full responsibility for my conduct during the event and agree that the organizers shall not be held responsible for any loss or damage arising from my participation.
+I agree to abide by all rules and regulations of the event(s). The decision of the organizing committee shall be final.
 </label>
 
 <button type="submit" id="submitBtn" disabled>Submit Registration</button>
 
 </form>
-</div>
-
-<div id="imgModal" class="modal" onclick="closeModal()">
-<span class="close">×</span>
-<img class="modal-content" id="modalImg">
 </div>
 
 <script>
@@ -194,7 +154,6 @@ const submitBtn = document.getElementById("submitBtn");
 const treasure = document.getElementById("treasure");
 const second = document.getElementById("secondCandidate");
 const declaration = document.getElementById("declaration");
-
 const secondInputs = second.querySelectorAll("input");
 
 treasure.addEventListener("change", () => {
@@ -216,23 +175,18 @@ form.querySelectorAll("input").forEach(i => {
 
 form.addEventListener("submit", e => {
     e.preventDefault();
-    fetch(scriptURL, { method: "POST", mode: "no-cors", body: new FormData(form) })
-        .then(() => {
-            alert("✅ Registration submitted successfully!");
-            form.reset();
-            submitBtn.disabled = true;
-            second.classList.add("hidden");
-        });
+    fetch(scriptURL, {
+        method: "POST",
+        body: new FormData(form)
+    })
+    .then(() => {
+        alert("✅ Registration submitted successfully!");
+        form.reset();
+        submitBtn.disabled = true;
+        second.classList.add("hidden");
+    })
+    .catch(() => alert("❌ Submission failed"));
 });
-
-function showImage(src) {
-    document.getElementById("imgModal").style.display = "block";
-    document.getElementById("modalImg").src = src;
-}
-
-function closeModal() {
-    document.getElementById("imgModal").style.display = "none";
-}
 </script>
 
 </body>
