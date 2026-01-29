@@ -9,25 +9,16 @@ body {
     margin: 0;
     padding: 0;
     font-family: "Segoe UI", Arial, sans-serif;
-    background: url("Background.png") no-repeat center center fixed;
-    background-size: cover;
-}
-
-body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    background: rgba(255, 255, 255, 0.78);
-    z-index: -1;
+    background: #f3efe9;
 }
 
 .container {
     max-width: 760px;
     margin: 40px auto;
-    background: rgba(255, 255, 255, 0.97);
+    background: #ffffff;
     padding: 30px;
-    border-radius: 16px;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+    border-radius: 14px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
 }
 
 h2, h3 {
@@ -38,9 +29,8 @@ h2, h3 {
 
 label {
     display: block;
-    margin-top: 14px;
+    margin-top: 12px;
     font-weight: 600;
-    color: #4b2e12;
 }
 
 input {
@@ -69,17 +59,12 @@ button {
     font-size: 16px;
     border: none;
     border-radius: 10px;
-    cursor: not-allowed;
-    opacity: 0.6;
-}
-
-button:enabled {
     cursor: pointer;
-    opacity: 1;
 }
 
-button:hover:enabled {
-    background: #6f4518;
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 </style>
 </head>
@@ -92,7 +77,6 @@ button:hover:enabled {
 <form id="registrationForm">
 
 <h3>Event Selection (Select at least one)</h3>
-
 <label><input type="checkbox" name="event" value="Speech Competition"> Speech Competition</label>
 <label><input type="checkbox" name="event" value="Rubik Cube"> Rubik Cube</label>
 <label><input type="checkbox" name="event" value="Sudoku Challenge"> Sudoku Challenge</label>
@@ -102,13 +86,13 @@ button:hover:enabled {
 <h3>Participant Details</h3>
 
 <label>Full Name</label>
-<input type="text" name="fullname" required pattern="[A-Za-z .]+">
+<input type="text" name="fullname" required>
 
 <label>Registration No.</label>
 <input type="text" name="registrationno" required>
 
 <label>Department</label>
-<input type="text" name="department" required pattern="[A-Za-z ]+">
+<input type="text" name="department" required>
 
 <label>Email ID</label>
 <input type="email" name="email" required>
@@ -120,25 +104,25 @@ button:hover:enabled {
 <h3>Second Participant Details (Treasure Hunt Only)</h3>
 
 <label>Full Name</label>
-<input type="text" name="secondname">
+<input type="text" name="secondname" disabled>
 
 <label>Registration No.</label>
-<input type="text" name="secondreg">
+<input type="text" name="secondreg" disabled>
 
 <label>Department</label>
-<input type="text" name="seconddept">
+<input type="text" name="seconddept" disabled>
 
 <label>Email ID</label>
-<input type="email" name="secondemail">
+<input type="email" name="secondemail" disabled>
 
 <label>Mobile Number</label>
-<input type="tel" name="secondmobile" pattern="[0-9]{10}">
+<input type="tel" name="secondmobile" pattern="[0-9]{10}" disabled>
 </div>
 
 <h3>Declaration</h3>
 <label>
-<input type="checkbox" id="declaration" required>
-I agree to abide by all rules and regulations of the event(s). The decision of the organizing committee shall be final.
+<input type="checkbox" id="declaration">
+I agree to abide by all rules and regulations of the event(s).
 </label>
 
 <button type="submit" id="submitBtn" disabled>Submit Registration</button>
@@ -156,39 +140,56 @@ const second = document.getElementById("secondCandidate");
 const declaration = document.getElementById("declaration");
 const secondInputs = second.querySelectorAll("input");
 
-treasure.addEventListener("change", () => {
-    second.classList.toggle("hidden", !treasure.checked);
-    secondInputs.forEach(i => i.required = treasure.checked);
+function toggleTreasure() {
+    if (treasure.checked) {
+        second.classList.remove("hidden");
+        secondInputs.forEach(i => {
+            i.disabled = false;
+            i.required = true;
+        });
+    } else {
+        second.classList.add("hidden");
+        secondInputs.forEach(i => {
+            i.disabled = true;
+            i.required = false;
+            i.value = "";
+        });
+    }
     validateForm();
-});
+}
 
 function validateForm() {
     const eventSelected = [...document.querySelectorAll('input[name="event"]')]
         .some(e => e.checked);
-    submitBtn.disabled = !(eventSelected && declaration.checked && form.checkValidity());
+
+    submitBtn.disabled = !(eventSelected && declaration.checked);
 }
 
-form.querySelectorAll("input").forEach(i => {
-    i.addEventListener("input", validateForm);
-    i.addEventListener("change", validateForm);
-});
+treasure.addEventListener("change", toggleTreasure);
+form.addEventListener("input", validateForm);
+form.addEventListener("change", validateForm);
 
 form.addEventListener("submit", e => {
     e.preventDefault();
+
+    if (!form.checkValidity()) {
+        alert("Please fill all required fields correctly.");
+        return;
+    }
 
     fetch(scriptURL, {
         method: "POST",
         body: new FormData(form)
     })
     .then(res => res.text())
-    .then(text => {
-        alert("Server response:\n" + text);
+    .then(() => {
+        alert("Registration submitted successfully!");
+        form.reset();
+        toggleTreasure();
+        submitBtn.disabled = true;
     })
-    .catch(err => {
-        alert("JS Error:\n" + err);
-    });
+    .catch(err => alert("Submission failed: " + err));
 });
-
 </script>
 
 </body>
