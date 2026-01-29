@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Event Participation Registration</title>
+
+<style>
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: url("Background.png") no-repeat center center fixed;
+    background-size: cover;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.78);
+    z-index: -1;
+}
+
+.container {
+    max-width: 760px;
+    margin: 40px auto;
+    background: rgba(255, 255, 255, 0.97);
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+}
+
+h2, h3 {
+    color: #5a381e;
+    border-bottom: 2px solid #c9a66b;
+    padding-bottom: 6px;
+}
+
+label {
+    display: block;
+    margin-top: 14px;
+    font-weight: 600;
+    color: #4b2e12;
+}
+
+input {
+    width: 100%;
+    padding: 9px;
+    margin-top: 6px;
+    border-radius: 6px;
+    border: 1px solid #c9a66b;
+}
+
+input[type="checkbox"] {
+    width: auto;
+    margin-right: 8px;
+}
+
+.hidden {
+    display: none;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 25px;
+    background: #8b5e2e;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 10px;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+button:enabled {
+    cursor: pointer;
+    opacity: 1;
+}
+
+button:hover:enabled {
+    background: #6f4518;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+}
+
+.modal-content {
+    margin: 5% auto;
+    display: block;
+    max-width: 80%;
+    max-height: 80%;
+    border-radius: 12px;
+    box-shadow: 0 0 30px rgba(255,255,255,0.4);
+}
+
+.close {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    font-size: 35px;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<h2>Event Participation Registration Form</h2>
+
+<form id="registrationForm">
+
+<!-- EVENT SELECTION -->
+<h3>Event Selection (Select at least one)</h3>
+
+<label>
+<input type="checkbox" name="event">
+Speech Competition
+<a href="javascript:void(0)" onclick="showImage('speech.png')">Click here</a>
+ for details
+</label>
+
+<label>
+<input type="checkbox" name="event">
+Rubik Cube
+<a href="javascript:void(0)" onclick="showImage('Rubikcube.png')">Click here</a>
+ for details
+</label>
+
+<label>
+<input type="checkbox" name="event"> 
+Sudoku Challenge
+<a href="javascript:void(0)" onclick="showImage('Sudoku.png')">Click here</a>
+ for details
+</label>
+
+<label>
+<input type="checkbox" name="event">
+Mem-O-Mathematics
+<a href="javascript:void(0)" onclick="showImage('Memoomathematics.png')">Click here</a>
+ for details
+</label>
+
+<label>
+<input type="checkbox" id="treasure" name="event">
+Treasure Hunt
+<a href="javascript:void(0)" onclick="showImage('treasurehunt.png')">Click here</a>
+ for details
+</label>
+
+
+<!-- PARTICIPANT DETAILS -->
+<h3>Participant Details</h3>
+
+<label>Full Name</label>
+<input type="text" id="fullname" required pattern="[A-Za-z .]+">
+
+<label>Registration No.</label>
+<input type="text" id="registrationno" required pattern="[A-Za-z0-9]+">
+
+<label>Department</label>
+<input type="text" id="department" required pattern="[A-Za-z ]+">
+
+<label>E-mail Id</label>
+<input type="email" id="email" required>
+
+<label>Mobile Number</label>
+<input type="tel" id="mobile" pattern="[0-9]{10}" required>
+
+<!-- SECOND CANDIDATE -->
+<div id="secondCandidate" class="hidden">
+<h3>Second Participant Details (Treasure Hunt Only)</h3>
+
+<label>Full Name</label>
+<input type="text" id="secondname" pattern="[A-Za-z .]+">
+
+
+<label>Registration No.</label>
+<input type="text" id="secondreg" pattern="[A-Za-z0-9]+">
+
+<label>Department</label>
+<input type="text" id="seconddept" pattern="[A-Za-z ]+">
+
+<label>E-mail Id</label>
+<input type="email" id="secondemail">
+
+<label>Mobile Number</label>
+<input type="tel" id="secondmobile" pattern="[0-9]{10}">
+</div>
+
+<!-- PAYMENT -->
+<div id="paymentSection" class="hidden">
+<h3>Treasure Hunt Payment (₹25)</h3>
+
+<p><strong>Scan the QR code below:</strong></p>
+
+<img src="qrcode.png" alt="QR Code"
+     style="width:200px; display:block; margin:15px auto;">
+
+<p style="text-align:center; font-weight:600;">
+After payment, submit the form.
+</p>
+</div>
+
+<!-- DECLARATION -->
+<h3>Declaration</h3>
+<label>
+<input type="checkbox" id="declaration" required>
+I agree to abide by all the rules and regulations of the event(s). I understand that the decision of the organizing committee and judges shall be final. I take full responsibility for my conduct during the event and agree that the organizers shall not be held responsible for any loss or damage arising from my participation.
+</label>
+
+<button type="submit" id="submitBtn" disabled>
+Submit Registration
+</button>
+
+</form>
+</div>
+
+<div id="imgModal" class="modal" onclick="closeModal()">
+    <span class="close" onclick="closeModal()">×</span>
+    <img class="modal-content" id="modalImg">
+</div>
+
+
+<script>
+/* STEP 2 GOES HERE */
+const scriptURL = "https://script.google.com/macros/s/AKfycbzHhD4VPIjexH5p21ulJzEpzRUQRx8y3M57IDlZDgrjUAKSPnsKIwfuzu99cplokTIF/exec";
+
+/* Existing variables */
+const form = document.getElementById("registrationForm");
+const submitBtn = document.getElementById("submitBtn");
+
+const treasure = document.getElementById("treasure");
+const second = document.getElementById("secondCandidate");
+const payment = document.getElementById("paymentSection");
+const declaration = document.getElementById("declaration");
+
+const secondInputs = second.querySelectorAll("input");
+
+/* Treasure Hunt logic */
+treasure.addEventListener("change", () => {
+    if (treasure.checked) {
+        second.classList.remove("hidden");
+        payment.classList.remove("hidden");
+        secondInputs.forEach(i => i.required = true);
+    } else {
+        second.classList.add("hidden");
+        payment.classList.add("hidden");
+        secondInputs.forEach(i => {
+            i.required = false;
+            i.value = "";
+        });
+    }
+    validateForm();
+});
+
+/* Validation */
+function validateForm() {
+    const events = document.querySelectorAll('input[name="event"]');
+    const eventSelected = [...events].some(e => e.checked);
+
+    if (!eventSelected || !declaration.checked) {
+        submitBtn.disabled = true;
+        return;
+    }
+
+
+    submitBtn.disabled = !form.checkValidity();
+}
+
+/* Monitor inputs */
+form.querySelectorAll("input").forEach(input => {
+    input.addEventListener("input", validateForm);
+    input.addEventListener("change", validateForm);
+});
+
+/* SUBMIT TO GOOGLE SHEET */
+form.addEventListener("submit", async e => {
+    e.preventDefault();
+
+    submitBtn.disabled = true;
+    submitBtn.innerText = "Submitting...";
+
+    let events = [...document.querySelectorAll('input[name="event"]:checked')]
+        .map(e => e.parentElement.innerText.trim())
+        .join(", ");
+
+
+    const data = {
+        events,
+        fullname: fullname.value,
+        registrationno: registrationno.value,
+        department: department.value,
+        email: email.value,
+        mobile: mobile.value,
+        secondname: secondname?.value || "",
+        secondreg: secondreg?.value || "",
+        seconddept: seconddept?.value || "",
+        secondemail: secondemail?.value || "",
+        secondmobile: secondmobile?.value || "",
+    };
+
+    fetch(scriptURL, {
+    method: "POST",
+    mode: "no-cors",
+    body: JSON.stringify(data)
+})
+
+    .then(() => {
+        alert("✅ Registration submitted successfully!");
+        form.reset();
+        submitBtn.innerText = "Submit Registration";
+        submitBtn.disabled = true;
+        second.classList.add("hidden");
+        payment.classList.add("hidden");
+    })
+    .catch(() => {
+        alert("❌ Submission failed. Try again.");
+        submitBtn.disabled = false;
+    });
+});
+
+/* Convert file to base64 */
+function toBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result.split(",")[1]);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+}
+function showImage(imgSrc) {
+    const modal = document.getElementById("imgModal");
+    const modalImg = document.getElementById("modalImg");
+
+    modal.style.display = "block";
+    modalImg.src = imgSrc;
+}
+
+function closeModal() {
+    document.getElementById("imgModal").style.display = "none";
+}
+
+/* OPTIONAL: close popup with ESC key */
+document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") {
+        closeModal();
+    }
+});
+</script>
+
+
+</body>
+</html>
