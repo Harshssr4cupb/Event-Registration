@@ -30,6 +30,34 @@ body::before {
     box-shadow: 0 15px 35px rgba(0,0,0,0.25);
 }
 
+/* ===== HEADER SECTION ===== */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #c9a66b;
+}
+
+.header-text h1 {
+    margin: 0;
+    font-size: 26px;
+    color: #5a381e;
+}
+
+.header-text p {
+    margin: 4px 0;
+    font-size: 15px;
+    color: #4b2e12;
+}
+
+.header-logo img {
+    height: 80px;
+    width: auto;
+}
+/* ========================== */
+
 h2, h3 {
     color: #5a381e;
     border-bottom: 2px solid #c9a66b;
@@ -113,6 +141,23 @@ button:hover:enabled {
 <body>
 
 <div class="container">
+
+<!-- ===== TOP HEADING WITH LOGO ===== -->
+<div class="header">
+    <div class="header-text">
+        <h1>Celebrating National Mathematics Day</h1>
+        <p><strong>by</strong></p>
+        <p>
+            <strong>Department of Mathematics and Statistics</strong><br>
+            Central University of Punjab, Bathinda
+        </p>
+    </div>
+    <div class="header-logo">
+        <img src="logo.jpg" alt="University Logo">
+    </div>
+</div>
+<!-- ================================ -->
+
 <h2>Event Participation Registration Form</h2>
 
 <form id="registrationForm">
@@ -130,11 +175,12 @@ button:hover:enabled {
 
 <label><input type="checkbox" name="event" value="Mem-O-Mathematics"> Meme-O-Mathematics
 <a href="javascript:void(0)" onclick="showImage('Memoomathematics.png')">Click here</a> for details</label>
+
 <p style="margin: 8px 0; font-weight: 600;">
-   <a href="https://docs.google.com/forms/d/e/1FAIpQLSf7XRDAoF6o0N-WGHpurAYv1dtCwhi-ZZSrYjrwOpwomB0K3Q/viewform?usp=publish-editor"
-     target="_blank">
-     Click here</a> to submit meme.
+<a href="https://docs.google.com/forms/d/e/1FAIpQLSf7XRDAoF6o0N-WGHpurAYv1dtCwhi-ZZSrYjrwOpwomB0K3Q/viewform?usp=publish-editor" target="_blank">
+Click here</a> to submit meme.
 </p>
+
 <label><input type="checkbox" id="treasure" name="event" value="Treasure Hunt"> Treasure Hunt
 <a href="javascript:void(0)" onclick="showImage('treasurehunt.png')">Click here</a> for details</label>
 
@@ -177,18 +223,19 @@ button:hover:enabled {
 <h3>Declaration</h3>
 <label>
 <input type="checkbox" id="declaration" value="Agreed">
-I agree to abide by all the rules and regulations of the event(s). I understand that the decision of the organizing committee and judges shall be final. I take full responsibility for my conduct during the event and agree that the organizers shall not be held responsible for any loss or damage arising from my participation.
+I agree to abide by all the rules and regulations of the event(s).
 </label>
 
 <button type="submit" id="submitBtn" disabled>Submit Registration</button>
 
 </form>
-    <h3>Contact, Venue & Event Schedule</h3>
+
+<h3>Contact, Venue & Event Schedule</h3>
 <p><strong>Contact Us:</strong> 8094304146 or 8209616647.</p>
-<p><strong>Venue:</strong> Seminar Hall-1 Ground Floor, Aryabhata Academic Block. </p>
-<p><strong>Timing:</strong> Feb-04, 2026 from 14:00 hrs. </p>
- <p><strong>Note: </strong> Result Declaration and Prize Distribution will be on Feb-05, 2026 (Same Venue). </p>
-       
+<p><strong>Venue:</strong> Seminar Hall-1 Ground Floor, Aryabhata Academic Block.</p>
+<p><strong>Timing:</strong> Feb-04, 2026 from 14:00 hrs.</p>
+<p><strong>Note:</strong> Result Declaration and Prize Distribution will be on Feb-05, 2026 (Same Venue).</p>
+
 </div>
 
 <div id="imgModal" class="modal" onclick="closeModal()">
@@ -210,9 +257,9 @@ const secondInputs = second.querySelectorAll("input");
 treasure.addEventListener("change", () => {
     second.classList.toggle("hidden", !treasure.checked);
     secondInputs.forEach(i => {
-    i.required = treasure.checked;
-    i.disabled = !treasure.checked;
-});
+        i.required = treasure.checked;
+        i.disabled = !treasure.checked;
+    });
     validateForm();
 });
 
